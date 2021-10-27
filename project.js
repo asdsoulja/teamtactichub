@@ -27,15 +27,17 @@ function problem_15() {
  function SizeChoice() {
   var size = parseInt(prompt("Please enter your number N to generate an NxN Tic Tac Toe field: ", ""));
   var field = ['-' * size] * size
-  var i = size
   var square = document.createElement('img')
   square.src = 'square.png'
   square.id = 'square'
   var src = document.getElementById('field')
   document.getElementById('field').style='display: block'
 
-  while (i > 0) {
-    src.appendChild(square)
-    i -= 1
+  for (i = 0; i < size; i++) {
+    for (j = 0; j < size; j++) {
+      src.appendChild(square.cloneNode(true))
+    }
+    src.innerHTML += '<br>'
   }
+  src.innerHTML += '<br>'
  }
