@@ -29,3 +29,7 @@ Project Requirements
 ·      Player can choose N x N tic-tac-toe
 
 ·      There are 3 different themes/skins
+
+
+Dmitrii Sidorin (Student ID: 218639633)
+Michael Khvatov (Student ID: 218986893)
