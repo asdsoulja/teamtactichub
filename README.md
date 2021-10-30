@@ -1,3 +1,7 @@
+Team Tactic (Dmitrii Sidorin, Michael Khvatov)
+
+Tic Tac Toe
+
 Abstract
 
 We develop an implementation of the classic game “tic-tac-toe”, played against an AI. 
