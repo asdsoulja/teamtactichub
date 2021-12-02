@@ -6,7 +6,8 @@ function sizeChoice() {
     board_size=prompt("Enter size of the board");
     win = prompt("Enter amount of cells in a row to win");
 
-    $('<div id="gameboard"></div>').appendTo('#main')
+    $('<div id="gameboard"></div>').appendTo('#main');
+    $('#sizechoice').css('margin-bottom', '0px');
 
     for (let i = 0; i < board_size; i++) {
         for (let j = 0; j < board_size; j++){
