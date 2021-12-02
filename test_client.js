@@ -2,9 +2,12 @@ let win;
 let board_size;
 let url= "http://localhost:3000/post";
 
-window.onload = () => {
+function sizeChoice() {
     board_size=prompt("Enter size of the board");
     win = prompt("Enter amount of cells in a row to win");
+
+    $('<div id="gameboard"></div>').appendTo('#main')
+
     for (let i = 0; i < board_size; i++) {
         for (let j = 0; j < board_size; j++){
             let newImg = document.createElement("img");
@@ -18,8 +21,6 @@ window.onload = () => {
              )
 
              $("#gameboard").append(newImg);
-
-             
         }
         $("#gameboard").append(document.createElement("br"));
     }
@@ -29,7 +30,7 @@ function select(cell){
 
     let move= cell.substr(0,2);
     let status=cell[2];
-    $("#"+cell).attr("src", "x.png");
+    $("#"+cell).attr("src", "x.jpg");
     console.log("win:"+win);
     console.log("size:"+board_size);
     
@@ -52,7 +53,7 @@ function response(data,status){
         alert("Server Wins");
     }
     else{
-        $('#'+res['server_move']+"0").attr("src","o.png");
+        $('#'+res['server_move']+"0").attr("src","o.jpg");
     }
     
 }
