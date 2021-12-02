@@ -1,3 +1,7 @@
+let win;
+let board_size;
+let url= "http://localhost:3000/post";  
+  
   function SizeChoice() {
   var size = parseInt(prompt("Please enter your number N to generate an NxN Tic Tac Toe field: ", ""));
   var field = ['-' * size] * size;

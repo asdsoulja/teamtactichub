@@ -18,6 +18,8 @@ window.onload = () => {
              )
 
              $("#gameboard").append(newImg);
+
+             
         }
         $("#gameboard").append(document.createElement("br"));
     }

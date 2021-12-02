@@ -12,8 +12,8 @@ Server doesn't handle win states/ loss states properly. Fix.
 const e = require('express');
 let express = require('express');
 const { request } = require('http');
-const { emitKeypressEvents } = require('readline');
-const { arrayBuffer } = require('stream/consumers');
+//const { emitKeypressEvents } = require('readline');
+//const { arrayBuffer } = require('stream/consumers');
 let app = express();
 
 let pmove;
@@ -103,7 +103,8 @@ app.post("/post",(req,res) => {
 
     console.log("---------------------------------------------------");
 
-}).listen(3000)
+}).listen(3000);
+console.log("Server is running!");
 
 
 //Function that adds a move to a vector in the vector array, or creates a new vector if it doesn't exist 

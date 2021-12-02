@@ -3,13 +3,21 @@
 <head>
   <meta charset="UTF-8"/>
   <title> Tic-Tac-Toe </title>
-  <link rel="stylesheet" type="text/css" href="styles.css" title="style" />
+  <link rel="stylesheet" type="text/css" href="test_styles.css" title="style" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="/scripts/test_client.js"></script>
+  <script src="test_client.js"></script>
 </head>
 <body>
+  <header>
+    <div class="header">
+      <h1>
+      Tic Tac Toe by Team Tactic
+      </h1>
+    </div>
+    </header>
 <div id="main">
 <h3>Welcome <span id="name"></span> to the game!</h3>
+<button onclick="sizeChoice()"> Choose the size of your field </button>
     <div id="gameboard">
 
     </div>
