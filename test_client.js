@@ -14,7 +14,7 @@ function sizeChoice() {
             let newImg = document.createElement("img");
              $(newImg).attr("id",""+i+j+"0");  //i,j are coordinates, the last bit is the state. -1 for O's, 0 for empty, and 1 for X's
              $(newImg).attr("class","cell");
-             $(newImg).attr("src","square.png");
+             $(newImg).attr("src","images/square.png");
 
              
              $(newImg).click(() => 
@@ -31,7 +31,7 @@ function select(cell){
 
     let move= cell.substr(0,2);
     let status=cell[2];
-    $("#"+cell).attr("src", "x.jpg");
+    $("#"+cell).attr("src", "images/x.jpg");
     console.log("win:"+win);
     console.log("size:"+board_size);
     
@@ -54,7 +54,7 @@ function response(data,status){
         alert("Server Wins");
     }
     else{
-        $('#'+res['server_move']+"0").attr("src","o.jpg");
+        $('#'+res['server_move']+"0").attr("src","images/o.jpg");
     }
     
 }

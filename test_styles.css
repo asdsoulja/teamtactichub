@@ -91,3 +91,11 @@
   #sizechoice {
       margin-bottom: 15px;
   }
+
+  #footer {
+      position: fixed;
+      text-align: center;
+      bottom: 3%;
+      align-self: center;
+      width: 100%;
+  }
