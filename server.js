@@ -17,12 +17,9 @@ let player_vectors = [];
 let server_vectors=[];
 let empty_list=[];
 
+
 //Intilaizes array of empty cells, out of which the server picks it's move
-for (let i = 0; i < 3; i++) {
-    for (let j = 0; j < 3; j++) {
-       empty_list.push(""+i+j); 
-    }
-}
+
 
 
 app.post("/post",(req,res) => {
@@ -30,10 +27,98 @@ app.post("/post",(req,res) => {
 
     res.header("Access-Control-Allow-Origin", "*");
     let info = JSON.parse(req.query['data'])
+    let size=info['size'];
+    for (let i = 0; i < size; i++) {
+        for (let j = 0; j < size; j++) {
+           empty_list.push(""+i+j); 
+        }
+    }
     let player_move=info['move']
-    if(empty.indexOf(move)!= -1){
+    if(empty_list.indexOf(info['move'])!= -1){
     let win = info['win']; //Amount of cells required to win
     let winner="TEST";
+    let player_moves = player_move[0] + player_move[1];
+
+    function chooseMove(player_vectors, server_vectors, empty){
+        //Array of moves that would be best for the player
+        let player_best=[];
+        let server_best=[];
+        
+        //If it's the first move of the game 
+        if(server_vectors.length==0){
+            return empty[3];
+         }
+    
+        player_vectors.forEach(element => {
+            //If the vector is a point
+            if(element.magnitude == 0){
+                let nearby= element.surrounding_points();
+                for (let i = 0; i < nearby.length; i++) {
+                    if(empty.indexOf(nearby[i]) != -1){
+                        player_best.push(nearby[i]);
+                        return;
+                    } 
+                }
+            }
+            if(empty.indexOf(element.nextTailPoint) == -1 && empty.indexOf(element.nextTipPoint) == -1){
+                return;
+            }
+            else if(empty.indexOf(element.nextTailPoint) != -1){
+                player_best.push(element.nextTailPoint);
+            }
+            else{
+                player_best.push(element.nextTipPoint);
+            }
+    
+    
+        });
+        if(player_best.length==0)player_best.push(empty[0]);
+    
+        server_vectors.forEach(element => {
+            if(element.magnitude == 0){
+                let nearby= element.surrounding_points();
+                for (let i = 0; i < nearby.length; i++) {
+                    if(empty.indexOf(nearby[i]) != -1){
+                        server_best.push(nearby[i]);
+                        return;
+                    } 
+                }
+            }
+            if(empty.indexOf(element.nextTailPoint) == -1 && empty.indexOf(element.nextTipPoint) == -1){
+                return;
+            }
+            else if(empty.indexOf(element.nextTailPoint) != -1){
+                server_best.push(element.nextTailPoint);
+            }
+            else{
+                server_best.push(element.nextTipPoint);
+            }
+        });
+        if(server_best.length==0)server_best.push(empty[0]);
+
+        //Choosing
+        if (empty.length == 0) {
+            return 'err';
+        }
+        if (player_moves == server_best[0]) {
+        if(player_vectors[0].magnitude >server_vectors[0].magnitude ){
+            console.log(player_best )
+            return player_best[0];
+        }
+    }
+        else if (player_moves == player_best[0]){
+            return server_best[0];
+        }
+        else {
+            if(player_vectors[0].magnitude >server_vectors[0].magnitude ){
+                console.log(player_best )
+                return player_best[0];
+            }
+            else{
+                return server_best[0];
+            }
+        }
+    }
 
     console.log("player move:" +"(" +player_move[0]+","+player_move[1]+")");
 
@@ -45,9 +130,13 @@ app.post("/post",(req,res) => {
         }
     addMove(player_vectors,player_move);
    
+    function filtering(v) {
+
+    }
+
     //Filters the array so it's more managable
     player_vectors=player_vectors.filter((vector,index,array) =>
-        index === array.findIndex( (v)=>(
+        index === array.findIndex( (v) => (
             v.toString() == vector.toString()
         )
         )
@@ -59,8 +148,10 @@ app.post("/post",(req,res) => {
         else return 0;
      } );  //Sorts player array in terms of highest magnitutde 
     
-    let server_move= chooseMove(player_vectors, server_vectors,empty_list) ; 
-    
+    let server_move= chooseMove(player_vectors, server_vectors, empty_list) ; 
+
+    console.log(server_move);
+
     console.log("server move:"+"(" +server_move[0]+","+server_move[1]+")");
     index = empty_list.indexOf(server_move);
     if (index > -1) {
@@ -81,17 +172,34 @@ app.post("/post",(req,res) => {
         else if(firstEl.magnitude < secondEl.magnitude) return 1;
         else return 0;
      } );
+    
+    if (empty_list.length == 0) {
+        winner = "tie";
+    }
+    else if(player_vectors[0].magnitude >= win) {
+        winner = "player";
+    }
+    else if(server_vectors[0].magnitude >= win) {
+        winner = "server";
+    }
 
-    if(player_vectors[0].magnitude >= win) winner = "player" ;
-    else if(server_vectors[0].magnitude >= win) winner = "server";
 
-    console.log("Magnitude:"+server_vectors[0].magnitude);
+    console.log("Magnitude: "+server_vectors[0].magnitude);
     
     jsontext = JSON.stringify({
         'server_move':server_move,
         'winner':winner 
     });}
     else {
+        if (empty_list.length == 0) {
+            winner = "tie";
+        }
+        else if(player_vectors[0].magnitude >= win) {
+            winner = "player";
+        }
+        else if(server_vectors[0].magnitude >= win) {
+            winner = "server";
+        }
         jsontext = JSON.stringify({
             'server_move':"err",
             'winner':winner 
@@ -172,73 +280,7 @@ function addMove(vector_array,move){
 
 
 
-function chooseMove(player_vectors, server_vectors,empty){
-    //Array of moves that would be best for the player
-    let player_best=[];
-    let server_best=[];
 
-    //If it's the first move of the game 
-    if(server_vectors.length==0){
-        return empty[3];
-     }
-
-    player_vectors.forEach(element => {
-        //If the vector is a point
-        if(element.magnitude == 0){
-            let nearby= element.surrounding_points();
-            for (let i = 0; i < nearby.length; i++) {
-                if(empty.indexOf(nearby[i]) != -1){
-                    player_best.push(nearby[i]);
-                    return;
-                } 
-            }
-        }
-        if(empty.indexOf(element.nextTailPoint) == -1 && empty.indexOf(element.nextTipPoint) == -1){
-            return;
-        }
-        else if(empty.indexOf(element.nextTailPoint) != -1){
-            player_best.push(element.nextTailPoint);
-        }
-        else{
-            player_best.push(element.nextTipPoint);
-        }
-
-
-    });
-    if(player_best.length==0)player_best.push(empty[0]);
-
-    server_vectors.forEach(element => {
-        if(element.magnitude == 0){
-            let nearby= element.surrounding_points();
-            for (let i = 0; i < nearby.length; i++) {
-                if(empty.indexOf(nearby[i]) != -1){
-                    server_best.push(nearby[i]);
-                    return;
-                } 
-            }
-        }
-        if(empty.indexOf(element.nextTailPoint) == -1 && empty.indexOf(element.nextTipPoint) == -1){
-            return;
-        }
-        else if(empty.indexOf(element.nextTailPoint) != -1){
-            server_best.push(element.nextTailPoint);
-        }
-        else{
-            server_best.push(element.nextTipPoint);
-        }
-    });
-    if(server_best.length==0)server_best.push(empty[0]);
-
-    //Choosing
-    if(player_vectors[0].magnitude >server_vectors[0].magnitude ){
-        console.log(player_best )
-        return player_best[0];
-    }
-    else{
-        return server_best[0];
-    }
-
-}
 
 
 
