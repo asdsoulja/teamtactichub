@@ -45,6 +45,11 @@ function select(cell){
 
 function response(data,status){
     let res=JSON.parse(data);
+    if(res['server_move'] == 0){
+        alert("Please click an empty square");
+        return;
+    }
+
     $('#'+res['server_move']+"0").attr("src","images/o.jpg");
     console.log("WINNER : " + res['winner']);
     if(res['winner']=="player"){
