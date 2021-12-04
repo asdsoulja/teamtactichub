@@ -1,4 +1,5 @@
 
+
 const e = require('express');
 let express = require('express');
 const { request } = require('http');
@@ -17,18 +18,20 @@ let server_vectors=[];
 let empty_list=[];
 
 //Intilaizes array of empty cells, out of which the server picks it's move
-for (let i = 0; i < 10; i++) {
-    for (let j = 0; j < 10; j++) {
+for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
        empty_list.push(""+i+j); 
     }
 }
 
 
 app.post("/post",(req,res) => {
+    let jsontext;
 
     res.header("Access-Control-Allow-Origin", "*");
     let info = JSON.parse(req.query['data'])
     let player_move=info['move']
+    if(empty.indexOf(move)!= -1){
     let win = info['win']; //Amount of cells required to win
     let winner="TEST";
 
@@ -84,16 +87,23 @@ app.post("/post",(req,res) => {
 
     console.log("Magnitude:"+server_vectors[0].magnitude);
     
-    let jsontext = JSON.stringify({
+    jsontext = JSON.stringify({
         'server_move':server_move,
         'winner':winner 
-    });
+    });}
+    else {
+        jsontext = JSON.stringify({
+            'server_move':"err",
+            'winner':winner 
+        })
+    }
     res.send(jsontext);
 
     console.log("player vectors :" + player_vectors);
     console.log("server vectors :"+server_vectors);
 
     console.log("---------------------------------------------------");
+
 
 }).listen(3000);
 console.log("Server is running!");
