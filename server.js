@@ -1,14 +1,4 @@
 
-/*
-
-▀█▀ █▀█ █▀▄ █▀█ ▀
-░█░ █▄█ █▄▀ █▄█ ▄
-
-Server doesn't handle win states/ loss states properly. Fix.
-
-*/
-
-
 const e = require('express');
 let express = require('express');
 const { request } = require('http');
@@ -40,7 +30,7 @@ app.post("/post",(req,res) => {
     let info = JSON.parse(req.query['data'])
     let player_move=info['move']
     let win = info['win']; //Amount of cells required to win
-    let winner="";
+    let winner="TEST";
 
     console.log("player move:" +"(" +player_move[0]+","+player_move[1]+")");
 
@@ -65,10 +55,8 @@ app.post("/post",(req,res) => {
         else if(firstEl.magnitude < secondEl.magnitude) return 1;
         else return 0;
      } );  //Sorts player array in terms of highest magnitutde 
-
-    if(player_vectors[0].magnitude == win) winner = "player" ;
     
-    let server_move = chooseMove(player_vectors, server_vectors, empty_list) ; 
+    let server_move= chooseMove(player_vectors, server_vectors,empty_list) ; 
     
     console.log("server move:"+"(" +server_move[0]+","+server_move[1]+")");
     index = empty_list.indexOf(server_move);
@@ -84,13 +72,17 @@ app.post("/post",(req,res) => {
         )
     );
 
+
     server_vectors.sort((firstEl, secondEl) => { 
         if(firstEl.magnitude > secondEl.magnitude) return -1;
         else if(firstEl.magnitude < secondEl.magnitude) return 1;
         else return 0;
      } );
 
-    if(server_vectors[0].magnitude == win) winner = "server";
+    if(player_vectors[0].magnitude >= win) winner = "player" ;
+    else if(server_vectors[0].magnitude >= win) winner = "server";
+
+    console.log("Magnitude:"+server_vectors[0].magnitude);
     
     let jsontext = JSON.stringify({
         'server_move':server_move,
@@ -110,110 +102,67 @@ console.log("Server is running!");
 //Function that adds a move to a vector in the vector array, or creates a new vector if it doesn't exist 
 //ToDo: Handle "gapped" vectors, vectors that have one point missing but are still threats
 function addMove(vector_array,move){
-    if(vector_array.length==0){
-        vector_array.push(new Vector(move,move));
-        return;
-    }
+    //Vectors which have had a point added to them , vectors of interest
+    let voi =[];
+     vector_array.forEach(element => {
+         if(element.direction==0){
+            let nearby = element.surrounding_points();
+            if(nearby.indexOf(move) != -1) element.addPoint(move,true);
+            console.log(element.toString());
+         }
+         if(element.nextTailPoint == move){
+             element.addPoint(move,false);
+             voi.push(element);
+         }
+         else if(element.nextTipPoint == move){
+            element.addPoint(move,true);
+            voi.push(element);
+         }
+     });
+     if(voi.length == 0){
+         vector_array.push(new Vector(move,move));
+     }
+    else if(voi.length >= 2){
+        voi.forEach(element => {
+            voi.forEach(element2 => {
+                if(element.direction == element2.direction){
+                    let x_max = Math.max(element.initialX,element.finalX,element2.initialX,element2.finalX);
+                    let y_max = Math.max(element.initialY,element.finalY,element2.initialY,element.finalX);
+                    let x_min= Math.min(element.initialX,element.finalX,element2.initialX,element2.finalX);
+                    let y_min=Math.min(element.initialY,element.finalY,element2.initialY,element.finalX);
 
-    //Basically, goes through each vector and sees if the move can be added to it
-    vector_array.forEach(element => {
-        let added = false ;
-        let dir = element.direction;
-        //The algorithm for adding a move to a vector depends on the direction of the vector, so we use a switch statment
-        switch (dir) {
-            case "x+":
-                if(move[1] == element.finalY){
-                    if(parseInt(move[0]) - 1 == element.finalX){
-                        element.addPoint(move,true);
-                        added=true;
+                    let newvec;
+                    switch (element.direction[0]) {
+                        case "x":
+                            newvec = new Vector(""+x_min+y_min, ""+x_max+y_min);
+                            break;
+                        case "y":
+                            newvec = new Vector(""+x_min+y_min, ""+x_min+y_max);
+                            break;
+                        case "d":
+                            if(element.direction == "d+"){
+                                newvec = new Vector(""+x_min+y_min, ""+x_max+y_max);
+                            }
+                            else{
+                                newvec = new Vector(""+x_min+y_max, ""+x_max+y_min);
+                            }
+                            break;
+                        default:
+                            break;
                     }
-                    else if(parseInt(move[0]) + 1 == element.initialX){
-                        element.addPoint(move,false);
-                        added=true;
-                    } 
+                    vector_array.splice(vector_array.indexOf(element),1);
+                    vector_array.splice(vector_array.indexOf(element2),1);
+                    vector_array.push(newvec);
                 }
-                break
-            case "x-":
-                if(move[1] == element.finalY){
-                    if(parseInt(move[0]) + 1 == element.finalX){
-                        element.addPoint(move,true);
-                        added=true;
-                    }
-                    else if(parseInt(move[0]) - 1 == element.initialX){
-                        element.addPoint(move,false);
-                        added=true;
-                    } 
-                }
-                break;
-            case "y+":
-                if(move[0] == element.finalX){
-                    if(parseInt(move[1]) - 1 == element.finalY){
-                        element.addPoint(move,true);
-                        added=true;
-                    }
-                    else if(parseInt(move[1]) + 1 == element.initialY){
-                        element.addPoint(move,false);
-                        added=true;
-                    } 
-                }
-                break;
-            
-            break;
-            case "y-":
-                if(move[0] == element.finalX){
-                    if(parseInt(move[1]) + 1 == element.finalY){
-                        element.addPoint(move,true);
-                        added=true;
-                    }
-                    else if(parseInt(move[1]) - 1 == element.initialY){
-                        element.addPoint(move,false);
-                        added=true;
-                    } 
-                }
-                break;
-            
-            break;
-            case"d+":
-                if(parseInt(move[0])+1 == element.initialX  &&parseInt(move[1])+1 == element.initialY){
-                    element.addPoint(move,false);
-                    added=true;
-                }
-                else if(parseInt(move[0])-1 == element.finalY  && parseInt(move[1])-1 == element.finalY){
-                    element.addPoint(move,true);
-                    added=true;
-                }
-                break;
-            case"d-":
-                if(parseInt(move[0])-1 == element.initialX  &&parseInt(move[1])-1 == element.initialY){
-                    element.addPoint(move,false);
-                    added=true;
-                }
-                else if(parseInt(move[0])+1 == element.finalY  && parseInt(move[1])+1 == element.finalY){
-                    element.addPoint(move,true);
-                    added=true;
-                }
-                break;
-            case "0":
-                if(element.surrounding_points(5).indexOf(move) != -1){
-                    element.addPoint(move,true);
-                }
-                break;
-            default:
-                break;
-        }
-        //If the move doesn't match any previous vector then addMove() creates a new 0 magnitude vector
-        if(!added ) {
-            vector_array.push(new Vector(move,move));
-        }
-        
-    });   
-    
+            });
+        });
+    }
 } 
 
 
 
 
-function chooseMove(player_vectors, server_vectors, empty){
+function chooseMove(player_vectors, server_vectors,empty){
     //Array of moves that would be best for the player
     let player_best=[];
     let server_best=[];
@@ -271,7 +220,7 @@ function chooseMove(player_vectors, server_vectors, empty){
     if(server_best.length==0)server_best.push(empty[0]);
 
     //Choosing
-    if(player_vectors[0].magnitude >server_vectors[0].magnitude) {
+    if(player_vectors[0].magnitude >server_vectors[0].magnitude ){
         console.log(player_best )
         return player_best[0];
     }
@@ -281,6 +230,11 @@ function chooseMove(player_vectors, server_vectors, empty){
 
 }
 
+
+
+function vecAdd(vec1,vec2){
+    
+}
 
 class Vector{
     //Coordinates of the vector
@@ -331,7 +285,7 @@ class Vector{
         let x_2 = parseInt(this.finalX);
         let y_2 = parseInt(this.finalY);
 
-        return Math.sqrt( (x_1-x_2)**2 + (y_1-y_2)**2 );
+        return Math.sqrt( (x_2-x_1)**2 + (y_2-y_1)**2 )+1;
     }
 
     //Returns point needed to extend the vector from the end
