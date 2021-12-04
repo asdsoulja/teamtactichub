@@ -60,13 +60,13 @@ function response(data, status) {
 }
 
 function changeTheme1() {
-  document.getElementById('stylesheet').href='stylesheet2.css';
+  document.getElementById('stylesheet').href='basic.css';
 }
 
 function changeTheme2() {
-  document.getElementById('stylesheet').href='stylesheet2.css';
+  document.getElementById('stylesheet').href='christmas.css';
 }
 
 function changeTheme3() {
-  document.getElementById('stylesheet').href='stylesheet2.css';
+  document.getElementById('stylesheet').href='halloween.css';
 }
