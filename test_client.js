@@ -1,10 +1,15 @@
 let win;
 let board_size;
 let url = "http://localhost:3000/post";
+let cellimage = "images/square.jpg";
+let ximage = "images/x.jpg"
+let omage = "images/o.jpg"
 
 function sizeChoice() {
   board_size = prompt("Enter size of the board");
   win = prompt("Enter amount of cells in a row to win");
+
+  $('.themes').hide();
 
   $('<div id="gameboard"></div>').appendTo("#main");
   $("#sizechoice").css("margin-bottom", "0px");
@@ -14,7 +19,7 @@ function sizeChoice() {
       let newImg = document.createElement("img");
       $(newImg).attr("id", "" + j + i + "0"); //i,j are coordinates, the last bit is the state. -1 for O's, 0 for empty, and 1 for X's
       $(newImg).attr("class", "cell");
-      $(newImg).attr("src", "images/square.png");
+      $(newImg).attr("src", cellimage);
 
       $(newImg).click(() => select($(newImg).attr("id")));
 
@@ -27,7 +32,7 @@ function sizeChoice() {
 function select(cell) {
   let move = cell.substr(0, 2);
   let status = cell[2];
-  $("#" + cell).attr("src", "images/x.jpg");
+  $("#" + cell).attr("src", ximage);
 
   $.post(
     url +
@@ -48,7 +53,7 @@ function response(data, status) {
     return;
   }
 
-  $("#" + res["server_move"] + "0").attr("src", "images/o.jpg");
+  $("#" + res["server_move"] + "0").attr("src", omage);
   console.log("WINNER : " + res["winner"]);
   if (res["winner"] == "tie") {
     alert("Tie!");
@@ -61,12 +66,21 @@ function response(data, status) {
 
 function changeTheme1() {
   document.getElementById('stylesheet').href='basic.css';
+  cellimage = "images/square.jpg";
+  ximage = "images/x.jpg"
+  omage = "images/o.jpg"
 }
 
 function changeTheme2() {
   document.getElementById('stylesheet').href='christmas.css';
+  cellimage = "images/christmassquare.png";
+  ximage = "images/christmasx.png"
+  omage = "images/christmaso.png"
 }
 
 function changeTheme3() {
   document.getElementById('stylesheet').href='halloween.css';
+  cellimage = "images/spookysquare.png";
+  ximage = "images/spookyx.png"
+  omage = "images/spookyo.png"
 }

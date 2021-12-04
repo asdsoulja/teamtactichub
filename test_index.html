@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title> Tic-Tac-Toe </title>
-  <link rel="stylesheet" type="text/css" href="basic.css" title="style" />
+  <link id="stylesheet" rel="stylesheet" type="text/css" href="basic.css" title="style" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="test_client.js"></script>
 </head>
@@ -15,15 +15,17 @@
       </h1>
     </div>
     </header>
-<div id="main">
+
 <h3>Welcome <span id="name"></span> to the game!</h3>
+<h3 class="themes">First, choose the theme you like below:</h3>
+<button onclick="changeTheme1()" id="changeTheme" class="themes"> Basic </button>
+<button onclick="changeTheme2()" id="changeTheme" class="themes"> Christmas Party! </button>
+<button onclick="changeTheme3()" id="changeTheme" class="themes"> Spooky Halloween </button>
+<div id="main"></div>
 <button onclick="sizeChoice()" id="sizechoice"> Choose the size of your field </button>
 
 </div>
-<h3>Choose the theme you like below:</h3>
-<button onclick="changeTheme1()" id="changeTheme"> Basic </button>
-<button onclick="changeTheme2()" id="changeTheme"> Christmas Party! </button>
-<button onclick="changeTheme3()" id="changeTheme"> Spooky Halloween </button>
+
 <footer id="footer">(c) Authors: <span> Dmitrii Sidorin, Michael Khvatov</span> </footer>
 </body> 
 </html>
