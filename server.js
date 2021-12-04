@@ -68,7 +68,7 @@ app.post("/post",(req,res) => {
 
     if(player_vectors[0].magnitude == win) winner = "player" ;
     
-    let server_move= chooseMove(player_vectors, server_vectors,empty_list) ; 
+    let server_move = chooseMove(player_vectors, server_vectors, empty_list) ; 
     
     console.log("server move:"+"(" +server_move[0]+","+server_move[1]+")");
     index = empty_list.indexOf(server_move);
@@ -213,7 +213,7 @@ function addMove(vector_array,move){
 
 
 
-function chooseMove(player_vectors, server_vectors,empty){
+function chooseMove(player_vectors, server_vectors, empty){
     //Array of moves that would be best for the player
     let player_best=[];
     let server_best=[];
@@ -271,7 +271,7 @@ function chooseMove(player_vectors, server_vectors,empty){
     if(server_best.length==0)server_best.push(empty[0]);
 
     //Choosing
-    if(player_vectors[0].magnitude >server_vectors[0].magnitude ){
+    if(player_vectors[0].magnitude >server_vectors[0].magnitude) {
         console.log(player_best )
         return player_best[0];
     }
