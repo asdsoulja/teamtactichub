@@ -58,3 +58,15 @@ function response(data, status) {
     alert("Server Wins");
   }
 }
+
+function changeTheme1() {
+  document.getElementById('stylesheet').href='stylesheet2.css';
+}
+
+function changeTheme2() {
+  document.getElementById('stylesheet').href='stylesheet2.css';
+}
+
+function changeTheme3() {
+  document.getElementById('stylesheet').href='stylesheet2.css';
+}

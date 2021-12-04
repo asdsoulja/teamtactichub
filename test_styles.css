@@ -99,3 +99,7 @@
       align-self: center;
       width: 100%;
   }
+
+  #changeTheme {
+      width: 200px;
+  }
