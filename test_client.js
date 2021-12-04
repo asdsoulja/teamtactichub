@@ -6,8 +6,8 @@ let ximage = "images/x.jpg"
 let omage = "images/o.jpg"
 
 function sizeChoice() {
-  board_size = prompt("Enter size of the board");
-  win = prompt("Enter amount of cells in a row to win");
+  board_size = prompt("Enter size of the board, Minimum amount: 3; Maximum amount: 3");
+  win = prompt("Enter amount of cells in a row to win, Minimum amount: 2; Maximum amount: size of the board");
 
   $('.themes').hide();
 
