@@ -12,7 +12,7 @@ function sizeChoice() {
     for (let i = 0; i < board_size; i++) {
         for (let j = 0; j < board_size; j++){
             let newImg = document.createElement("img");
-             $(newImg).attr("id",""+i+j+"0");  //i,j are coordinates, the last bit is the state. -1 for O's, 0 for empty, and 1 for X's
+             $(newImg).attr("id",""+j+i+"0");  //i,j are coordinates, the last bit is the state. -1 for O's, 0 for empty, and 1 for X's
              $(newImg).attr("class","cell");
              $(newImg).attr("src","images/square.png");
 
@@ -32,8 +32,7 @@ function select(cell){
     let move= cell.substr(0,2);
     let status=cell[2];
     $("#"+cell).attr("src", "images/x.jpg");
-    console.log("win:"+win);
-    console.log("size:"+board_size);
+
     
     $.post(url+'?data='+JSON.stringify({
         'move':move, 
@@ -46,15 +45,14 @@ function select(cell){
 
 function response(data,status){
     let res=JSON.parse(data);
-    console.log(res['winner']);
+    $('#'+res['server_move']+"0").attr("src","images/o.jpg");
+    console.log("WINNER : " + res['winner']);
     if(res['winner']=="player"){
         alert("Player Wins");
     }
     else if(res['winner']=="server"){
         alert("Server Wins");
     }
-    else{
-        $('#'+res['server_move']+"0").attr("src","images/o.jpg");
-    }
+
     
 }
