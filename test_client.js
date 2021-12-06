@@ -4,6 +4,7 @@ let url = "http://localhost:3000/post";
 let cellimage = "images/square.jpg";
 let ximage = "images/x.jpg"
 let omage = "images/o.jpg"
+let move_num=1;
 
 function sizeChoice() {
   board_size = prompt("Enter size of the board, Minimum amount: 3; Maximum amount: 3");
@@ -41,9 +42,11 @@ function select(cell) {
         move: move,
         size: board_size,
         win: win,
+        move_num:move_num
       }),
     response
   );
+  move_num++;
 }
 
 function response(data, status) {
