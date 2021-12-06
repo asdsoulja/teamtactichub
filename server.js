@@ -40,6 +40,7 @@ app.post("/post", (req, res) => {
 
 
     let player_move = info["move"];
+
     if (empty_list.indexOf(info["move"]) != -1) {
     
       console.log(
@@ -87,6 +88,7 @@ app.post("/post", (req, res) => {
       else winner = "tie";
 
       console.log("Player magnitutude: " + player_vectors[0].magnitude);
+      console.log("PV:" + player_vectors[0].toString());
       console.log("Server magnitutude: " + server_vectors[0].magnitude);
     
     }
@@ -119,7 +121,6 @@ app.post("/post", (req, res) => {
 console.log("Server is running!");
 
 //Function that adds a move to a vector in the vector array, or creates a new vector if it doesn't exist
-//ToDo: Handle "gapped" vectors, vectors that have one point missing but are still threats
 function addMove(vector_array, move, empty) {
   //Vectors which have had a point added to them , vectors of interest. Every single
   //vector in this array shares a point
@@ -172,7 +173,7 @@ function addMove(vector_array, move, empty) {
   
     
   //Tests if new  vector touches any points, creating any new vectors
-    
+   console.log(voi.toString()); 
   let addvec;
   voi.forEach(element => {
     voi.forEach(element2 => {
@@ -209,10 +210,10 @@ function addMove(vector_array, move, empty) {
             addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
             break;
           case "d+":
-            addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
+            addvec = new Vector(""+x_min+y_max,""+x_max+y_min);
             break;
           case "d-":
-            addvec = new Vector(""+x_min+y_max,""+x_max+y_min);
+            addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
             break;
           default:
             console.log("ruh roh something when wrong");
@@ -248,9 +249,7 @@ function chooseMove(player_vectors, server_vectors, empty) {
     for (let j = 0; j < player_vectors[i].nextPoints.length; j++) {
       let nextPoints = player_vectors[i].nextPoints;
       
-      console.log("next_points:" + nextPoints[j] +" empty : "+empty);
       if(empty.indexOf(nextPoints[j]) != -1) {
-        console.log("next_points: +" +nextPoints[j]);
         player_best.push(nextPoints[j]);
       }
     }
@@ -317,11 +316,11 @@ class Vector {
       case "x":
         return Math.abs(parseInt(this.finalX) - parseInt(this.initialX))+1;
       case "y": 
-        return Math.abs(parseInt(this.finalY) - parseInt(this.initialY))+1 ;
+        return Math.abs(parseInt(this.finalY) - parseInt(this.initialY))+1;
       case "d+":
-        return Math.abs(parseInt(this.finalX) - parseInt(this.initialX)) + 1;
+        return Math.abs(parseInt(this.finalX) - parseInt(this.initialX))+1;
       case "d-":
-        return Math.abs(parseInt(this.finalX) - parseInt(this.initialX)) +1;
+        return Math.abs(parseInt(this.finalX) - parseInt(this.initialX))+1;
       default:
         return 0;
     }
@@ -357,8 +356,9 @@ class Vector {
           ret_arr.push(""+(parseInt(this.initialX)-1)+(parseInt(this.initialY)-1));
         }
         else{
+
           ret_arr.push(""+(parseInt(this.finalX)-1)+(parseInt(this.finalY)-1));
-          ret_arr.push(""+(parseInt(this.initialX)+1)+(parseInt(this.finalinitialXY)+1));
+          ret_arr.push(""+(parseInt(this.initialX)+1)+(parseInt(this.initialY)+1));
         }
         break;
       case "d-":
@@ -437,11 +437,6 @@ class Vector {
     );
   }
 }
-
-
-
-
-
 
 
 
