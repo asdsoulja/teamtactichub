@@ -131,7 +131,7 @@ function addMove(vector_array, move, empty) {
     if(vector.direction == "0"){
       let nearby = vector.nextPoints;
       for (let i = 0; i < nearby.length; i++) {
-        if(empty.indexOf(nearby[i]) != -1){
+        if(empty.indexOf(nearby[i]) != -1 && nearby[i]==move){
           vector.addPoint(move,true);
           voi.push(vector);
           break; 
@@ -173,7 +173,7 @@ function addMove(vector_array, move, empty) {
   
     
   //Tests if new  vector touches any points, creating any new vectors
-   console.log(voi.toString()); 
+ 
   let addvec;
   voi.forEach(element => {
     voi.forEach(element2 => {
@@ -210,10 +210,10 @@ function addMove(vector_array, move, empty) {
             addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
             break;
           case "d+":
-            addvec = new Vector(""+x_min+y_max,""+x_max+y_min);
+            addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
             break;
           case "d-":
-            addvec = new Vector(""+x_min+y_min,""+x_max+y_max);
+            addvec = new Vector(""+x_min+y_max,""+x_max+y_min);
             break;
           default:
             console.log("ruh roh something when wrong");
@@ -226,7 +226,6 @@ function addMove(vector_array, move, empty) {
       }
     });
   });
-  console.log(vector_array.toString());
 
 }
 
