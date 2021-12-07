@@ -14,6 +14,7 @@ function sizeChoice() {
 
   $('<div id="gameboard"></div>').appendTo("#main");
   $("#sizechoice").css("margin-bottom", "0px");
+  $("#sizechoice").css("display", "none");
 
   for (let i = 0; i < board_size; i++) {
     for (let j = 0; j < board_size; j++) {
@@ -59,12 +60,42 @@ function response(data, status) {
   $("#" + res["server_move"] + "0").attr("src", omage);
   console.log("WINNER : " + res["winner"]);
   if (res["winner"] == "tie") {
-    alert("Tie!");
+    alert("GG! Tie!");
+    resTie();
   } else if (res["winner"] == "player") {
     alert("Player Wins");
+    resWin();
   } else if (res["winner"] == "server") {
     alert("Server Wins");
+    resLose();
   }
+}
+
+function resWin() {
+  $(".cell").css("display", 'none');
+  $('<h2 id="finaltext"></h2>').appendTo("#gameboard");
+  let newImg = document.createElement("img");
+  $(newImg).attr("src", "images/uwin.png");
+  $("#gameboard").append(newImg);
+  $('#finaltext').text("Congratulations! You won this tough battle! If you want to give our AI a chance, feel free to restart the server and play again!");
+}
+
+function resTie() {
+  $(".cell").css("display", 'none');
+  $('<h2 id="finaltext"></h2>').appendTo("#gameboard");
+  let newImg = document.createElement("img");
+  $(newImg).attr("src", "images/utie.png");
+  $("#gameboard").append(newImg);
+  $('#finaltext').text("GG! This was an intence game! If you want to determine want to compete our AI once again to determine who is better, feel free to restart the server and play again!");
+}
+
+function resLose() {
+  $(".cell").css("display", 'none');
+  $('<h2 id="finaltext"></h2>').appendTo("#gameboard");
+  let newImg = document.createElement("img");
+  $(newImg).attr("src", "images/ulose.png");
+  $("#gameboard").append(newImg);
+  $('#finaltext').text("GG! You did good, but this time our AI took over you! If you want your revenge, feel free to restart the server and play again!");
 }
 
 function changeTheme1() {
