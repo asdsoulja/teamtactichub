@@ -7,8 +7,19 @@ let omage = "images/o.jpg"
 let move_num=1;
 
 function sizeChoice() {
-  board_size = prompt("Enter size of the board, Minimum amount: 3; Maximum amount: 3");
-  win = prompt("Enter amount of cells in a row to win, Minimum amount: 2; Maximum amount: size of the board");
+
+  
+  while (true) {
+    board_size = prompt("Enter size of the board, Minimum amount: 3; Maximum amount: 9");
+    if(parseInt(board_size) >= 3 && 9 >= parseInt(board_size) &&  !Number.isNaN(parseInt(board_size))) break;
+    alert("Please enter a valid value");
+  }
+
+  while (true) {
+    win = prompt("Enter cells in a row to win, must be between 3 and "+board_size);
+    if(win >= 3 && parseInt(win) <= parseInt(board_size) && !Number.isNaN(parseInt(board_size))) break;
+    alert("Please enter a valid value");
+  }
 
   $('.themes').hide();
 
@@ -34,6 +45,10 @@ function sizeChoice() {
 function select(cell) {
   let move = cell.substr(0, 2);
   let status = cell[2];
+  if($("#" + cell).attr("src") !=cellimage ) {
+    alert("Please click on an empty cell");
+    return;
+  } 
   $("#" + cell).attr("src", ximage);
 
   $.post(
@@ -52,10 +67,6 @@ function select(cell) {
 
 function response(data, status) {
   let res = JSON.parse(data);
-  if (res["server_move"] == "err") {
-    alert("Please click an empty square");
-    return;
-  }
 
   $("#" + res["server_move"] + "0").attr("src", omage);
   console.log("WINNER : " + res["winner"]);
